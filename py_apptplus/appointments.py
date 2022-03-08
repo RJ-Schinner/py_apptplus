@@ -1,6 +1,7 @@
+from urllib.parse import urlencode
 from py_apptplus.appt_plus_request import ApptPlusRequest
-import os, urllib3
-
+from datetime import datetime
+import os, urllib3, json
 
 class Appointment:
     def __init__(self, rawAppt:dict) -> None:
@@ -95,7 +96,20 @@ class Appointment:
         return self._statusDesc
 
 
-
 class AppointmentsV1(ApptPlusRequest):
-    def getAppointmentsInRange(self, start, end) -> list[Appointment]:
-        pass
+
+    #This method allows us to get all of the appointments between start and end
+    def getAppointmentsInRange(self, start:datetime, end:datetime) -> list[Appointment]:
+        #Build URL with query params (cant use fields parameter cause its a POST request)
+        qParams = {
+            'response_type':'json',
+            'start_date':start.strftime('%Y%m%d'),
+            'end_date':end.strftime('%Y%m%d')}
+
+        apiURL = f'{self.baseURL}/Appointments/GetAppointments?{urlencode(qParams)}'
+
+        rawResp:dict = json.loads(self.doPOST(apiURL).data.decode('utf-8'))
+
+        return [Appointment(rawAppt) for rawAppt in rawResp['data']]
+
+    
