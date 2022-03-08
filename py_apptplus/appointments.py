@@ -1,4 +1,3 @@
-from time import strptime
 from urllib.parse import urlencode
 from py_apptplus.appt_plus_request import ApptPlusRequest
 from datetime import datetime
@@ -107,7 +106,32 @@ class OpenDate:
 
     @property
     def date(self) -> datetime:
-        return strptime(self._date, '%Y%m%d')
+        return datetime.strptime(self._date, '%Y%m%d')
+
+class OpenSlot:
+    def __init__(self, rawOpenSlot:dict) -> None:
+        self._cID:str = rawOpenSlot['c_id']
+        self._date:str = rawOpenSlot['date']
+        self._startTime:str = rawOpenSlot['start_time']
+        self._gmtTimestamp:str = rawOpenSlot['gmt_timestamp']
+
+    @property
+    def cID(self) -> str:
+        return self._cID
+
+    @property
+    def date(self) -> str:
+        return self._date
+
+    @property
+    def startTime(self) -> str:
+        return self._startTime
+
+    @property
+    def gmtTimestamp(self) -> str:
+        return self._gmtTimestamp
+
+        
 
 
 class AppointmentsV1(ApptPlusRequest):
@@ -130,7 +154,7 @@ class AppointmentsV1(ApptPlusRequest):
     #Returns the dates that are available for scheduling. The method will
     #return all available dates between start_date + num_days. if start_date
     #is not specified, it will default to today's date.
-    def getOpenDates(self, numDays:int, startDate:datetime = None):
+    def getOpenDates(self, numDays:int, startDate:datetime = None) -> list[OpenDate]:
         #Build URL
         qParams:dict = {
             'response_type':'json',
@@ -146,3 +170,19 @@ class AppointmentsV1(ApptPlusRequest):
 
         if rawResp['data']:
             return [OpenDate(rawOpenDate) for rawOpenDate in rawResp['data']]
+
+    def getOpenSlots(self, startDate:datetime, numDays:int, locationID:int = None) -> list[OpenSlot]:
+        #Build URL 
+        qParams:dict = {
+            'start_date' : startDate.strftime('%Y%m%d'),
+            'num_days' : numDays
+        }
+
+        if locationID:
+            qParams['location_id'] = locationID
+
+        apiURL:str = f'{self.baseURL}/Appointments/GetOpenSlots?{urlencode(qParams)}'
+        rawResp:dict = json.loads(self.doPOST(apiURL).data.decode('utf-8'))
+
+        if rawResp['data']:
+            return [OpenSlot(rawOpenSlot) for rawOpenSlot in rawResp['data']]
