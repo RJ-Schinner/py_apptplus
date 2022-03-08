@@ -1,7 +1,8 @@
+from time import strptime
 from urllib.parse import urlencode
 from py_apptplus.appt_plus_request import ApptPlusRequest
 from datetime import datetime
-import os, urllib3, json
+import json
 
 class Appointment:
     def __init__(self, rawAppt:dict) -> None:
@@ -95,6 +96,19 @@ class Appointment:
     def statusDesc(self) -> str:
         return self._statusDesc
 
+class OpenDate:
+    def __init__(self, rawOpenDate:dict) -> None:
+        self._cID:str = rawOpenDate['c_id'] #location_id
+        self._date:str = rawOpenDate['date']
+
+    @property
+    def cID(self) -> str:
+        return self._cID
+
+    @property
+    def date(self) -> datetime:
+        return strptime(self._date, '%Y%m%d')
+
 
 class AppointmentsV1(ApptPlusRequest):
 
@@ -106,10 +120,29 @@ class AppointmentsV1(ApptPlusRequest):
             'start_date':start.strftime('%Y%m%d'),
             'end_date':end.strftime('%Y%m%d')}
 
+        #Make Request
         apiURL = f'{self.baseURL}/Appointments/GetAppointments?{urlencode(qParams)}'
+        rawResp:dict = json.loads(self.doPOST(apiURL).data.decode('utf-8'))
+        
+        if rawResp['data']:
+            return [Appointment(rawAppt) for rawAppt in rawResp['data']]
 
+    #Returns the dates that are available for scheduling. The method will
+    #return all available dates between start_date + num_days. if start_date
+    #is not specified, it will default to today's date.
+    def getOpenDates(self, numDays:int, startDate:datetime = None):
+        #Build URL
+        qParams:dict = {
+            'response_type':'json',
+            'num_days':numDays
+        }
+
+        if startDate:
+            qParams['start_date'] = startDate.strftime('%Y%m%d')
+
+        #Make Request
+        apiURL:str = f'{self.baseURL}/Appointments/GetOpenDates?{urlencode(qParams)}'
         rawResp:dict = json.loads(self.doPOST(apiURL).data.decode('utf-8'))
 
-        return [Appointment(rawAppt) for rawAppt in rawResp['data']]
-
-    
+        if rawResp['data']:
+            return [OpenDate(rawOpenDate) for rawOpenDate in rawResp['data']]
