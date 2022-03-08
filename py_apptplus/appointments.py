@@ -131,9 +131,10 @@ class OpenSlot:
     def gmtTimestamp(self) -> str:
         return self._gmtTimestamp
 
-        
-
-
+#The AppointmentsV1 class is the class that wraps the calling to
+#the various Appointments api endpoints into easy to use methods.
+#That is this class and its methods are the ones actually using an
+#http client to make requests to the api.
 class AppointmentsV1(ApptPlusRequest):
 
     #This method allows us to get all of the appointments between start and end
