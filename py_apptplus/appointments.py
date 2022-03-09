@@ -9,7 +9,7 @@ class Appointment:
         self._apptID:str = rawAppt['appt_id']
         self._customerID:str = rawAppt['customer_id']
         self._employeeID:str = rawAppt['employee_id']
-        self._dealerName:str = rawAppt['dealer_name']
+        self._dealerName:str = rawAppt['dealer_name'] if rawAppt.get('dealer_name') else None
         self._poNumber:str = rawAppt['po_number']
         self._lastName:str = rawAppt['last_name']
         self._firstName:str = rawAppt['first_name']
