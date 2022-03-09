@@ -51,6 +51,8 @@ class CustomersV1(ApptPlusRequest):
         #Make Request
         resp:dict = self.doPOST(apiURL)
 
+        #Make sure there is actually something to return and if
+        #there is we return it
         if resp['data']:
             return Customer(resp['data'][0])
 
