@@ -90,6 +90,10 @@ class Location:
     def bookID(self) -> str:
         return self._bookID
 
+#This class wraps the calling to some of the Location endpoints
+#in the Appointments Plus API. In particular you are able to get
+#a particular Location based on a ID or you can get a list of all
+#active locations in the system.
 class LocationsV1(ApptPlusRequest):
 
     #This method retrieves information about one specific location
