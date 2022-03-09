@@ -1,7 +1,6 @@
 from urllib.parse import urlencode
 from py_apptplus.appt_plus_request import ApptPlusRequest
 from datetime import datetime
-import json
 
 class Appointment:
     def __init__(self, rawAppt:dict) -> None:
@@ -167,7 +166,7 @@ class AppointmentsV1(ApptPlusRequest):
 
         #Make Request
         apiURL:str = f'{self.baseURL}/Appointments/GetOpenDates?{urlencode(qParams)}'
-        rawResp:dict = json.loads(self.doPOST(apiURL).data.decode('utf-8'))
+        rawResp:dict = self.doPOST(apiURL)
 
         if rawResp['data']:
             return [OpenDate(rawOpenDate) for rawOpenDate in rawResp['data']]
@@ -183,7 +182,7 @@ class AppointmentsV1(ApptPlusRequest):
             qParams['location_id'] = locationID
 
         apiURL:str = f'{self.baseURL}/Appointments/GetOpenSlots?{urlencode(qParams)}'
-        rawResp:dict = json.loads(self.doPOST(apiURL).data.decode('utf-8'))
+        rawResp:dict = self.doPOST(apiURL)
 
         if rawResp['data']:
             return [OpenSlot(rawOpenSlot) for rawOpenSlot in rawResp['data']]

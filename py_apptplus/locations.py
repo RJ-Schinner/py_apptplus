@@ -1,8 +1,5 @@
-
 from urllib.parse import urlencode
 from py_apptplus.appt_plus_request import ApptPlusRequest
-from datetime import datetime
-import json
 
 class Location:
     def __init__(self, rawLocation:dict) -> None:
