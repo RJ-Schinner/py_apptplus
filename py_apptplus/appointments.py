@@ -147,7 +147,7 @@ class AppointmentsV1(ApptPlusRequest):
 
         #Make Request
         apiURL = f'{self.baseURL}/Appointments/GetAppointments?{urlencode(qParams)}'
-        rawResp:dict = json.loads(self.doPOST(apiURL).data.decode('utf-8'))
+        rawResp:dict = self.doPOST(apiURL)
         
         if rawResp['data']:
             return [Appointment(rawAppt) for rawAppt in rawResp['data']]

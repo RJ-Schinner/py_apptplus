@@ -1,8 +1,8 @@
 from base64 import b64encode
 from http.client import responses
-from urllib.parse import urlencode
 from urllib3 import PoolManager, HTTPResponse
 from py_apptplus.appt_plus_exceptions import ApptPlusException
+import json
 
 class ApptPlusRequest:
 
@@ -29,8 +29,11 @@ class ApptPlusRequest:
         rawResp:HTTPResponse = self.httpClient.request('POST', apiURL, headers=self._headers)
         del self._headers['Content-Type']
 
-        if rawResp.status == 200:
-            return rawResp
+        #Make sure the request returned a 200 code, and additonaly check
+        #the "result" field in the response and check that it says "success"
+        resp:dict = json.loads(rawResp.data.decode('utf-8'))
+        if rawResp.status == 200 and resp['result'] == 'success':
+            return resp
 
         else:
             raise ApptPlusException(
