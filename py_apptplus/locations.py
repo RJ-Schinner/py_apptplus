@@ -114,4 +114,17 @@ class LocationsV1(ApptPlusRequest):
     #appointments plus system, and all the relevant information about
     #a location
     def getAllLocations(self) -> list[Location]:
-        pass
+        #Build URL
+        qParams:dict = {
+            'response_type': 'json',
+            'status': 1 #A status of 1 implies the location is active
+        }
+        apiURL:str = f'{self.baseURL}/Locations/GetLocations?{urlencode(qParams)}'
+
+        #Make request
+        resp:dict = self.doPOST(apiURL)
+
+        #Make sure data is there and return a Location object
+        #if there is
+        if resp['data']:
+            return [Location(rawLoc) for rawLoc in resp['data']]
