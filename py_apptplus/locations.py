@@ -89,3 +89,29 @@ class Location:
     @property
     def bookID(self) -> str:
         return self._bookID
+
+class LocationsV1(ApptPlusRequest):
+
+    #This method retrieves information about one specific location
+    #with id "locationID"
+    def getLocation(self, locationID:int) -> Location:
+        #Build URL
+        qParams:dict = {
+            'response_type': 'json',
+            'c_id': locationID
+        }
+        apiURL:str = f'{self.baseURL}/Locations/GetLocations?{urlencode(qParams)}'
+
+        #Make request
+        resp:dict = self.doPOST(apiURL)
+
+        #Make sure data is there and return a Location object
+        #if there is
+        if resp['data']:
+            return Location(resp['data'][0])
+    
+    #This method retrieves a list of all the locations set up in the
+    #appointments plus system, and all the relevant information about
+    #a location
+    def getAllLocations(self) -> list[Location]:
+        pass
