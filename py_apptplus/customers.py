@@ -56,3 +56,27 @@ class CustomersV1(ApptPlusRequest):
         if resp['data']:
             return Customer(resp['data'][0])
 
+    #Updates field(s) for a particular customer in the appointment plus system. 
+    #The customer to be updated is passed as a parameter to the method.
+    def updateCustomer(self): 
+        pass
+
+    #This method deletes a single customer from the appointment plus system
+    #the customer to be deleted is the customer passed to the method as a 
+    #parameter "customerID". !!DELETING A CUSTOMER ALSO DELETES THEIR APPTS,
+    #NOTES, PETS/CHILDREN, WAITING LIST ENTRIES, ASSIGNED PACKAGES AND FUTURE 
+    #SMS REMINDERS!! Once deleted the customer record cannot be restord.
+    def deleteCustomer(self, customerID:str) -> bool:
+        #Build URL
+        qParams:dict = {
+            'response_type':'json',
+            'customer_id':customerID}
+        apiURL:str = f'{self.baseURL}/Customers/DeleteCustomers?{urlencode(qParams)}'
+
+        #Make request
+        resp:dict = self.doPOST(apiURL)
+
+        if resp['result'] == 'success':
+            return True
+
+        return False
