@@ -23,6 +23,7 @@ filteredAppts = [
 ]
 
 data = [{
+    'appt_id':apt.apptID,
     'location_id': apt.locationID,
     'customer_id': apt.customerID,
     'start_time': apt.startTime,
