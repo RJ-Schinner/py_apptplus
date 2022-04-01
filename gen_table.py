@@ -17,7 +17,8 @@ end = now + timedelta(days=150)
 appts = APTSV1.getAppointmentsInRange(start, end)
 filteredAppts = [
     apt for apt in appts
-    if apt.poNumber.upper()[0] == 'P'
+    if apt.poNumber
+    and apt.poNumber.upper()[0] == 'P'
     and len(apt.poNumber) == 8
 ]
 
