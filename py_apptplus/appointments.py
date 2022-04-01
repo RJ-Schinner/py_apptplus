@@ -1,6 +1,7 @@
 from urllib.parse import urlencode
 from py_apptplus.appt_plus_request import ApptPlusRequest
-from datetime import datetime
+from datetime import datetime, timedelta
+import datetime as dt
 
 class Appointment:
     def __init__(self, rawAppt:dict) -> None:
@@ -16,7 +17,6 @@ class Appointment:
         self._staffScreenName:str = rawAppt['staff_screen_name']
 
         #Date info
-        self._date:str = rawAppt['date']
         self._startTime:int = rawAppt['start_time']
         self._endTime:int = rawAppt['end_time']
         self._createdOn:str = rawAppt['createTimestamp']
@@ -67,16 +67,24 @@ class Appointment:
         return self._staffScreenName
 
     @property
-    def date(self) -> str:
-        return self._date
-
-    @property
     def startTime(self) -> str:
-        return self._startTime
+        #The api stores the time as minutes since midight so we
+        #do some math to get a datetime stamp
+        now = datetime.now()
+        midnight = now.replace(hour=0, minute=0, second=0, microsecond=0)
+        
+        time = midnight + timedelta(minutes=self._startTime)
+        return time.strftime('%Y-%m-%d %H:%M:%S %z')
 
     @property
     def endTime(self) -> str:
-        return self._endTime
+        #The api stores the time as minutes since midight so we
+        #do some math to get a datetime stamp
+        now = datetime.now()
+        midnight = now.replace(hour=0, minute=0, second=0, microsecond=0)
+        
+        time = midnight + timedelta(minutes=self._startTime)
+        return time.strftime('%Y-%m-%d %H:%M:%S %z')
 
     @property
     def createdOn(self) -> str:

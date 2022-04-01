@@ -17,7 +17,6 @@ appts = APTSV1.getAppointmentsInRange(start, end)
 data = [{
     'location_id': apt.locationID,
     'customer_id': apt.customerID,
-    'date': apt.date,
     'start_time': apt.startTime,
     'end_time': apt.endTime,
     'po_number': apt.poNumber,
@@ -26,4 +25,6 @@ data = [{
 } for apt in appts]
 
 df = pd.DataFrame(data)
+
+print(df)
 
