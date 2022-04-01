@@ -2,7 +2,7 @@ from py_apptplus.locations import *
 from py_apptplus.appointments import *
 import os
 import pandas as pd
-from  datetime import datetime
+from  datetime import datetime, timedelta
 
 creds = {
     'user': os.environ.get('APPT_PLUS_USER'),
@@ -11,7 +11,9 @@ creds = {
 }
 
 APTSV1 = AppointmentsV1(creds)
-start = datetime.strptime('20220201', '%Y%m%d') ; end = datetime.strptime('20221030', '%Y%m%d')
+now = datetime.now()
+start = now - timedelta(days=30)
+end = now + timedelta(days=150)
 appts = APTSV1.getAppointmentsInRange(start, end)
 
 data = [{
