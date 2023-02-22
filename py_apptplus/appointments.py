@@ -143,6 +143,19 @@ class OpenSlot:
 #That is this class and its methods are the ones actually using an
 #http client to make requests to the api.
 class AppointmentsV1(ApptPlusRequest):
+    def getAppointments(self, po_number:str):
+        #Build URL with query params (cant use fields parameter cause its a POST request)
+        qParams = {
+            'response_type':'json',
+            'po_number_search': po_number
+            }
+
+        #Make Request
+        apiURL = f'{self.baseURL}/Appointments/GetAppointments?{urlencode(qParams)}'
+        rawResp:dict = self.doPOST(apiURL)
+        
+        if rawResp['data']:
+            return [Appointment(rawAppt) for rawAppt in rawResp['data']]
 
     #This method allows us to get all of the appointments between start and end
     def getAppointmentsInRange(self, start:datetime, end:datetime) -> list[Appointment]:
