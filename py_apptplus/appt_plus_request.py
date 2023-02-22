@@ -24,15 +24,15 @@ class ApptPlusRequest:
     def httpClient(self) -> PoolManager:
         return self._httpClient
 
-    def doPOST(self, apiURL:str) -> HTTPResponse:
-        self._headers['Content-Type'] = 'application/json'
+    def doPOST(self, apiURL:str, noContentType:bool=False) -> HTTPResponse:
+        if not noContentType:
+            self._headers['Content-Type'] = 'application/json'
+        
         rawResp:HTTPResponse = self.httpClient.request('POST', apiURL, headers=self._headers)
-        del self._headers['Content-Type']
-
-        #Make sure the request returned a 200 code, and additonaly check
+        #Make sure the request returned a 200 code, and additonalys check
         #the "result" field in the response and check that it says "success"
         resp:dict = json.loads(rawResp.data.decode('utf-8'))
-        if rawResp.status == 200 and resp['result'] == 'success':
+        if rawResp.status == 200 and resp.get('result') == 'success':
             return resp
 
         else:

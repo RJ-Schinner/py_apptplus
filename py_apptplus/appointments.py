@@ -154,7 +154,7 @@ class AppointmentsV1(ApptPlusRequest):
         apiURL = f'{self.baseURL}/Appointments/GetAppointments?{urlencode(qParams)}'
         rawResp:dict = self.doPOST(apiURL)
         
-        if rawResp['data']:
+        if rawResp.get('data'):
             return [Appointment(rawAppt) for rawAppt in rawResp['data']]
 
     #This method allows us to get all of the appointments between start and end
@@ -169,7 +169,7 @@ class AppointmentsV1(ApptPlusRequest):
         apiURL = f'{self.baseURL}/Appointments/GetAppointments?{urlencode(qParams)}'
         rawResp:dict = self.doPOST(apiURL)
         
-        if rawResp['data']:
+        if rawResp.get('data'):
             return [Appointment(rawAppt) for rawAppt in rawResp['data']]
 
     #Returns the dates that are available for scheduling. The method will
@@ -189,7 +189,7 @@ class AppointmentsV1(ApptPlusRequest):
         apiURL:str = f'{self.baseURL}/Appointments/GetOpenDates?{urlencode(qParams)}'
         rawResp:dict = self.doPOST(apiURL)
 
-        if rawResp['data']:
+        if rawResp.get('data'):
             return [OpenDate(rawOpenDate) for rawOpenDate in rawResp['data']]
 
     def getOpenSlots(self, startDate:datetime, numDays:int, locationID:int = None) -> list[OpenSlot]:
@@ -205,5 +205,5 @@ class AppointmentsV1(ApptPlusRequest):
         apiURL:str = f'{self.baseURL}/Appointments/GetOpenSlots?{urlencode(qParams)}'
         rawResp:dict = self.doPOST(apiURL)
 
-        if rawResp['data']:
+        if rawResp.get('data'):
             return [OpenSlot(rawOpenSlot) for rawOpenSlot in rawResp['data']]
