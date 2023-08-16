@@ -17,6 +17,7 @@ class Appointment:
         self._staffScreenName:str = rawAppt['staff_screen_name']
 
         #Date info
+        self._date:str = rawAppt['date']
         self._startTime:int = rawAppt['start_time']
         self._endTime:int = rawAppt['end_time']
         self._createdOn:str = rawAppt['createTimestamp']
@@ -65,6 +66,10 @@ class Appointment:
     @property 
     def staffScreenName(self) -> str:
         return self._staffScreenName
+
+    @property
+    def date(self) -> dt.datetime:
+        return dt.datetime.strptime(self.date, '%Y%m%d')
 
     @property
     def startTime(self) -> str:
