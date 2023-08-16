@@ -10,7 +10,9 @@ creds = {
 
 APPTSV1 = AppointmentsV1(creds)
 
-appointments = APPTSV1.getAppointmentsInRange(datetime.strptime('20220301', '%Y%m%d'), datetime.strptime('20220303', '%Y%m%d'))
+appointments = APPTSV1.getAppointments('P1338850')
+print(appointments[0].startTime)
+
 
 for appt in appointments:
     print(appt.date)

@@ -69,7 +69,7 @@ class Appointment:
 
     @property
     def date(self) -> dt.datetime:
-        return dt.datetime.strptime(self.date, '%Y%m%d')
+        return dt.datetime.strptime(self._date, '%Y%m%d')
 
     @property
     def startTime(self) -> dt.datetime:
