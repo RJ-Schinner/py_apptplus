@@ -72,14 +72,14 @@ class Appointment:
         return dt.datetime.strptime(self.date, '%Y%m%d')
 
     @property
-    def startTime(self) -> str:
+    def startTime(self) -> dt.datetime:
         #The api stores the time as minutes since midight so we
         #do some math to get a datetime stamp
-        now = datetime.now()
-        midnight = now.replace(hour=0, minute=0, second=0, microsecond=0)
+        appt_date = self.date
+        full_timestamp = appt_date.replace(hour=0, minute=0, second=0, microsecond=0)
         
-        time = midnight + timedelta(minutes=self._startTime)
-        return time.strftime('%Y-%m-%d %H:%M:%S %z')
+        full_timestamp = full_timestamp + timedelta(minutes=self._startTime)
+        return full_timestamp
 
     @property
     def endTime(self) -> str:
